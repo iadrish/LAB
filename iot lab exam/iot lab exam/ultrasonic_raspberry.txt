@@ -1,0 +1,62 @@
+import RPi.GPIO as GPIO
+import time
+
+# Define the pins for the LED and the ultrasonic temperature sensor
+led_pin = 18
+trig_pin = 17
+echo_pin = 27
+
+# Set up the GPIO pins
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(led_pin, GPIO.OUT)
+GPIO.setup(trig_pin, GPIO.OUT)
+GPIO.setup(echo_pin, GPIO.IN)
+
+# Define the variables for storing the distance and temperature readings
+distance = 0
+temperature = 0
+
+# Define the function for calculating the distance and temperature readings
+def read_distance_temperature():
+    # Send a trigger signal to the sensor
+    GPIO.output(trig_pin, True)
+    time.sleep(0.00001)
+    GPIO.output(trig_pin, False)
+    
+    # Calculate the distance and temperature readings
+    pulse_start = time.time()
+    pulse_end = time.time()
+    
+    while GPIO.input(echo_pin) == 0:
+        pulse_start = time.time()
+        
+    while GPIO.input(echo_pin) == 1:
+        pulse_end = time.time()
+        
+    pulse_duration = pulse_end - pulse_start
+    distance = pulse_duration * 17150
+    temperature = (distance - 0.5) * 100.0
+    
+    return distance, temperature
+
+# Main program
+try:
+    while True:
+        # Read the distance and temperature readings
+        distance, temperature = read_distance_temperature()
+        
+        # Print the readings to the serial monitor
+        print("Distance: {:.2f} cm, Temperature: {:.2f} C".format(distance, temperature))
+        
+        # Turn on the LED based on the temperature level
+        if temperature < 20:
+            GPIO.output(led_pin, GPIO.LOW)
+        else:
+            GPIO.output(led_pin, GPIO.HIGH)
+        
+        # Wait for some time before taking the next reading
+        time.sleep(1)
+        
+# Clean up the GPIO pins
+finally:
+    GPIO.cleanup()

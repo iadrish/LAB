@@ -1,0 +1,60 @@
+// Define the pins for the three LEDs
+int greenLED = 2;
+int yellowLED = 3;
+int redLED = 4;
+
+// Define the pins for the ultrasonic temperature sensor
+int trigPin = 9;
+int echoPin = 10;
+
+// Define the variables for storing the distance and temperature readings
+float distance;
+float temperature;
+
+void setup() {
+  // Initialize the serial communication and the LED pins
+  Serial.begin(9600);
+  pinMode(greenLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
+}
+
+void loop() {
+  // Send a trigger signal to the sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Calculate the distance and temperature readings
+  distance = pulseIn(echoPin, HIGH) / 58.0;
+  temperature = (distance - 0.5) * 100.0;
+
+  // Print the readings to the serial monitor
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" cm, Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" C");
+
+  // Turn on the LEDs based on the temperature level
+  if (temperature < 20) {
+    digitalWrite(greenLED, HIGH);
+    digitalWrite(yellowLED, LOW);
+    digitalWrite(redLED, LOW);
+  }
+  else if (temperature >= 20 && temperature < 30) {
+    digitalWrite(greenLED, LOW);
+    digitalWrite(yellowLED, HIGH);
+    digitalWrite(redLED, LOW);
+  }
+  else {
+    digitalWrite(greenLED, LOW);
+    digitalWrite(yellowLED, LOW);
+    digitalWrite(redLED, HIGH);
+  }
+
+  // Wait for some time before taking the next reading
+  delay(1000);
+}

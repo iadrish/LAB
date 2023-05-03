@@ -1,0 +1,50 @@
+#define TRIG_PIN 5 // set the Trig pin of the ultrasonic temperature sensor
+#define ECHO_PIN 6 // set the Echo pin of the ultrasonic temperature sensor
+
+int ledPin1 = 3; // set the first LED pin number
+int ledPin2 = 4; // set the second LED pin number
+int ledPin3 = 7; // set the third LED pin number
+
+void setup() {
+  Serial.begin(9600); // initialize the serial communication
+  pinMode(TRIG_PIN, OUTPUT); // set the Trig pin as an output
+  pinMode(ECHO_PIN, INPUT); // set the Echo pin as an input
+  pinMode(ledPin1, OUTPUT); // set the first LED pin as an output
+  pinMode(ledPin2, OUTPUT); // set the second LED pin as an output
+  pinMode(ledPin3, OUTPUT); // set the third LED pin as an output
+}
+
+void loop() {
+  digitalWrite(TRIG_PIN, LOW); // set the Trig pin to LOW
+  delayMicroseconds(2); // wait for 2 microseconds
+
+  digitalWrite(TRIG_PIN, HIGH); // set the Trig pin to HIGH
+  delayMicroseconds(10); // wait for 10 microseconds
+  digitalWrite(TRIG_PIN, LOW); // set the Trig pin to LOW
+
+  long duration = pulseIn(ECHO_PIN, HIGH); // measure the duration of the pulse
+  float distance = duration * 0.034 / 2; // calculate the distance in centimeters
+  float temperature = distance / 2.5; // calculate the temperature in degrees Celsius
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" cm | Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" C");
+
+  if (temperature > 25.0) { // if the temperature is above 25 degrees Celsius
+    digitalWrite(ledPin1, HIGH); // turn on the first LED
+    digitalWrite(ledPin2, LOW); // turn off the second LED
+    digitalWrite(ledPin3, LOW); // turn off the third LED
+  } else if (temperature > 20.0) { // if the temperature is between 20 and 25 degrees Celsius
+    digitalWrite(ledPin1, LOW); // turn off the first LED
+    digitalWrite(ledPin2, HIGH); // turn on the second LED
+    digitalWrite(ledPin3, LOW); // turn off the third LED
+  } else { // if the temperature is below 20 degrees Celsius
+    digitalWrite(ledPin1, LOW); // turn off the first LED
+    digitalWrite(ledPin2, LOW); // turn off the second LED
+    digitalWrite(ledPin3, HIGH); // turn on the third LED
+  }
+
+  delay(1000); // wait for 1 second before taking another reading
+}

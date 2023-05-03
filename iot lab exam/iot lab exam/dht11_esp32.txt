@@ -1,0 +1,47 @@
+#include <DHT.h> // include the DHT library
+
+#define DHTPIN 2          // set the data pin of the DHT11 sensor
+#define DHTTYPE DHT11     // set the type of DHT sensor
+DHT dht(DHTPIN, DHTTYPE); // initialize the DHT sensor
+
+int ledPin1 = 3; // set the first LED pin number
+int ledPin2 = 4; // set the second LED pin number
+
+void setup()
+{
+    Serial.begin(9600);       // initialize the serial communication
+    pinMode(ledPin1, OUTPUT); // set the first LED pin as an output
+    pinMode(ledPin2, OUTPUT); // set the second LED pin as an output
+    dht.begin();              // start the DHT sensor
+}
+
+void loop()
+{
+    float humidity = dht.readHumidity();       // read the humidity value from the DHT sensor
+    float temperature = dht.readTemperature(); // read the temperature value from the DHT sensor
+
+    if (isnan(humidity) || isnan(temperature))
+    { // check if the reading is valid
+        Serial.println("Failed to read from DHT sensor!");
+        return;
+    }
+
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.print(" °C | Humidity: ");
+    Serial.print(humidity);
+    Serial.println(" %");
+
+    if (temperature > 30 || humidity > 60)
+    {                                // check if the temperature or humidity exceeds the threshold
+        digitalWrite(ledPin1, HIGH); // turn the first LED on
+        digitalWrite(ledPin2, LOW);  // turn the second LED off
+    }
+    else
+    {
+        digitalWrite(ledPin1, LOW);  // turn the first LED off
+        digitalWrite(ledPin2, HIGH); // turn the second LED on
+    }
+
+    delay(2000); // wait for 2 seconds before taking another reading
+}

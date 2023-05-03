@@ -1,0 +1,43 @@
+// single led
+int ledPin = 2; // set the LED pin number
+void setup()
+{
+    pinMode(ledPin, OUTPUT); // set the LED pin as an output
+}
+
+void loop()
+{
+    digitalWrite(ledPin, HIGH); // turn the LED on
+    delay(1000);                // wait for 1 second
+    digitalWrite(ledPin, LOW);  // turn the LED off
+    delay(1000);                // wait for 1 second
+}
+
+// multiple led
+int ledPin1 = 2; // set the first LED pin number
+int ledPin2 = 3; // set the second LED pin number
+int ledPin3 = 4; // set the third LED pin number
+
+void setup()
+{
+    pinMode(ledPin1, OUTPUT); // set the first LED pin as an output
+    pinMode(ledPin2, OUTPUT); // set the second LED pin as an output
+    pinMode(ledPin3, OUTPUT); // set the third LED pin as an output
+}
+
+void loop()
+{
+    digitalWrite(ledPin1, HIGH); // turn the first LED on
+    delay(500);                  // wait for half a second
+    digitalWrite(ledPin1, LOW);  // turn the first LED off
+
+    digitalWrite(ledPin2, HIGH); // turn the second LED on
+    delay(500);                  // wait for half a second
+    digitalWrite(ledPin2, LOW);  // turn the second LED off
+
+    digitalWrite(ledPin3, HIGH); // turn the third LED on
+    delay(500);                  // wait for half a second
+    digitalWrite(ledPin3, LOW);  // turn the third LED off
+
+    delay(500); // wait for half a second before starting again
+}

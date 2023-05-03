@@ -1,0 +1,46 @@
+#include <LiquidCrystal.h> // include the LiquidCrystal library
+#define TRIG_PIN 5 // set the Trig pin of the ultrasonic temperature sensor
+#define ECHO_PIN 6 // set the Echo pin of the ultrasonic temperature sensor
+
+LiquidCrystal lcd(2, 3, 4, 5, 6, 7); // initialize the LCD object and its pins
+
+void setup() {
+  Serial.begin(9600); // initialize the serial communication
+  pinMode(TRIG_PIN, OUTPUT); // set the Trig pin as an output
+  pinMode(ECHO_PIN, INPUT); // set the Echo pin as an input
+  lcd.begin(16, 2); // set the number of columns and rows on the LCD
+  lcd.setCursor(0, 0); // set the cursor position to the first column on the first row
+  lcd.print("Distance:"); // print the "Distance:" text on the first row
+  lcd.setCursor(0, 1); // set the cursor position to the first column on the second row
+  lcd.print("Temp:"); // print the "Temp:" text on the second row
+}
+
+void loop() {
+  digitalWrite(TRIG_PIN, LOW); // set the Trig pin to LOW
+  delayMicroseconds(2); // wait for 2 microseconds
+
+  digitalWrite(TRIG_PIN, HIGH); // set the Trig pin to HIGH
+  delayMicroseconds(10); // wait for 10 microseconds
+  digitalWrite(TRIG_PIN, LOW); // set the Trig pin to LOW
+
+  long duration = pulseIn(ECHO_PIN, HIGH); // measure the duration of the pulse
+  float distance = duration * 0.034 / 2; // calculate the distance in centimeters
+  float temperature = distance / 2.5; // calculate the temperature in degrees Celsius
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" cm | Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" C");
+
+  lcd.setCursor(9, 0); // set the cursor position to the 10th column on the first row
+  lcd.print(distance); // print the distance value on the first row
+  lcd.print(" cm"); // print the "cm" text on the first row
+
+  lcd.setCursor(5, 1); // set the cursor position to the 6th column on the second row
+  lcd.print(temperature); // print the temperature value on the second row
+  lcd.print(" C"); // print the "C" text on the second row
+
+  delay(1000); // wait for 1 second before taking another reading
+  lcd.clear(); // clear the LCD display before taking another reading
+}
