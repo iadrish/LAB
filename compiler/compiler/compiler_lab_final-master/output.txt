@@ -1,0 +1,5 @@
+Symbol table:
+--------------
+Variable name: x, value: 10
+Variable name: y, value: 20
+Function name: main, return type: int, number of parameters: 0
